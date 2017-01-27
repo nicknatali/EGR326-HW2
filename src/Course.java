@@ -78,13 +78,8 @@ public class Course {
                 return true;
 
                 //Check within start and end times
-            } else if (timeObj.compareTo(time) < 0 && endTime.compareTo(time) > 0) {
-                return true;
-
-                // If there aren't any matches
-            } else {
-                return false;
-            }
+            } else // If there aren't any matches
+                return timeObj.compareTo(time) < 0 && endTime.compareTo(time) > 0;
         }
         return false;
 
@@ -128,9 +123,9 @@ public class Course {
         int minute = this.startTime.getMinute();
         boolean period = this.startTime.isPM();
 
-        Time t = new Time(hour, minute, period);
-        t.shift(this.duration);
-        return t;
+        Time timeObj = new Time(hour, minute, period);
+        timeObj.shift(this.duration);
+        return timeObj;
     }
 
     /**

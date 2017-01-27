@@ -17,7 +17,7 @@ public enum Weekday {
     /**
      * Constructor
      */
-    private Weekday(String day) {
+    Weekday(String day) {
         if(day.equals(null)) {
             throw new IllegalArgumentException("Day must have a value!");
         }

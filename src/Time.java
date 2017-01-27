@@ -20,9 +20,9 @@ public class Time implements Cloneable, Comparable<Time> {
             throw new IllegalArgumentException("The hour cannot be less than 1 or greater than 12");
         }
 
-        if(minute < 1 || minute > 59) {
-            throw new IllegalArgumentException("The minutes cannot be less than 1 or greater than 59");
-        }
+//        if(minute < 1 || minute > 59) {
+//            throw new IllegalArgumentException("The minutes cannot be less than 1 or greater than 59");
+//        }
 
         this.hour = hour;
         this.minute = minute;
@@ -76,7 +76,7 @@ public class Time implements Cloneable, Comparable<Time> {
 
         // Must use try catch to call Object's clone method
         try {
-            return  (Time) clone();
+            return clone();
         } catch (CloneNotSupportedException e) {
             //Dead code this will never happen because Cloneable is already implemented.
             System.out.println(e);
@@ -186,11 +186,7 @@ public class Time implements Cloneable, Comparable<Time> {
             }
 
             //Determining meridiem
-            if(newHour % 24 >= 12 ||  (this.hour == 12 & this.PM && newHour > 24)) {
-                this.PM = true;
-            } else {
-                this.PM = false;
-            }
+            this.PM = newHour % 24 >= 12 || (this.hour == 12 && this.PM && newHour > 24);
 
             this.hour = newHour % 24;
 

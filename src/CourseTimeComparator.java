@@ -3,7 +3,7 @@ import java.util.*;
 
 /**
  * Created by NickNatali on 1/22/17.
- * TODO: Write what this class does
+ * This class is for sorting a schedule by days and times
  */
 public class CourseTimeComparator implements Comparator<Course> {
 

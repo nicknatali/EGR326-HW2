@@ -2,7 +2,7 @@ import java.util.Comparator;
 
 /**
  * Created by NickNatali on 1/22/17.
- * TODO: write what this class is about
+ *  This class is for sorting a schedule by course name
  */
 public class CourseNameComparator implements Comparator<Course> {
 
