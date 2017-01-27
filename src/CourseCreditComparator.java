@@ -3,7 +3,8 @@ import java.util.*;
 
 /**
  * Created by NickNatali on 1/22/17.
- * TODO: Write what this class is about
+ * This class is for sorting a schedule by number of credits for each
+ course
  */
 public class CourseCreditComparator implements Comparator<Course> {
 
