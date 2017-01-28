@@ -1,3 +1,4 @@
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -5,7 +6,7 @@ import java.util.TreeSet;
  * Created by NickNatali on 1/22/17.
  * This class contains information about a particular university course.
  */
-public class Course {
+public class Course implements Cloneable{
 
     //Variables
     private String name;
@@ -18,6 +19,10 @@ public class Course {
      * Constructor
      */
     public Course(String name, int credits, Set<Weekday> days, Time startTime, int duration) {
+
+        if(name == "") {
+            throw new IllegalArgumentException("Name cannot be nil");
+        }
 
         if(days.isEmpty()) {
             throw new IllegalArgumentException("Invalid amount of days.");
@@ -52,10 +57,10 @@ public class Course {
 
         //Loop through each day classes are in session
         //Check for conflicts
-        for (Weekday d : days) {
+        for (Weekday day : days) {
             // Check conflicts with start and end times
-            boolean startTime = contains(d, start);
-            boolean endTime = contains(d, end);
+            boolean startTime = contains(day, start);
+            boolean endTime = contains(day, end);
 
             if (startTime || endTime) {
                 return true;
@@ -139,7 +144,19 @@ public class Course {
             days += day.toShortName();
         }
 
-        return this.name + ", " + this.credits + ", " + days + ", " + this.startTime + ", " + this.duration;
+        return this.name + "," + this.credits + "," + days + "," + this.startTime + "," + this.duration;
     }
 
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        try {
+            return clone();
+        } catch (CloneNotSupportedException e) {
+            //Dead code this will never happen because Cloneable is already implemented.
+            System.out.println(e);
+            return null;
+        }
+
+
+    }
 }

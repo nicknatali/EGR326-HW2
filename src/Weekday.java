@@ -44,14 +44,35 @@ public enum Weekday {
 
     public String toShortName() {
 
-    return null;
+        if( this == MONDAY) {
+            return "M";
+        } else if (this == TUESDAY) {
+            return "T";
+        } else if(this == WEDNESDAY){
+            return "W";
+        } else if(this == THURSDAY) {
+            return "R";
+        } else if(this == FRIDAY) {
+            return "F";
+        }
 
+        return "";
     }
 
     public String toString() {
 
-        return null;
+        if( this == MONDAY) {
+            return "Monday";
+        } else if (this == TUESDAY) {
+            return "Tuesday";
+        } else if(this == WEDNESDAY){
+            return "Wednesday";
+        } else if(this == THURSDAY) {
+            return "Thursday";
+        } else if(this == FRIDAY) {
+            return "Friday";
+        }
+
+        return "";
     }
-
-
 }

@@ -163,11 +163,7 @@ public class TimeInstructorTest {
     public void cloneTest(){
         Time t1 = new Time(9, 9, false);
         Time t2 = null;
-        try {
-            t2 = t1.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
+        t2 = t1.clone();
         assertHelper(9, 9, false, t2);
         Assert.assertTrue(t1.equals(t2));
         Assert.assertFalse(t1 == t2);

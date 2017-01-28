@@ -11,23 +11,28 @@ import java.util.*;
 public class TestCourse {
 
     @Test
-    public static void testEquals() {
+    public void testEquals() {
         //Arrange
-        Time timeObj = new Time(1, 20 , true);
+        Time timeObj = new Time(1,20, true);
+        Time timeObj2 = new Time(1, 20, true)
+
+
+        boolean test = timeObj.equals(timeObj2);
         Course courseObject = new Course("EGR405", 3, null , timeObj, 1);
 
         //Act
         boolean testCourse = timeObj.equals(courseObject);
 
         //Assert
-        Assert.assertEquals("Invalid equal", testCourse, true);
+        Assert.assertEquals("Invalid equal", test, true);
     }
 
     // Tests getEndTime()
     @Test
-    public static void testGetEndTime() {
+    public void testGetEndTime() {
         //Arrange
         Time timeObj = new Time(1, 20 , true);
+
         Course courseObject = new Course("EGR405", 3, null , timeObj, 1);
 
         //Act
@@ -39,7 +44,7 @@ public class TestCourse {
 
     // Tests contains
     @Test
-    public static void testContains() {
+    public void testContains() {
         //Arrange
         Time timeObj = new Time(2, 35 , true);
         Course courseObject = new Course("EGR405", 3, null , timeObj, 2);
@@ -53,7 +58,7 @@ public class TestCourse {
 
     // Tests conflictsWith
     @Test
-    public static void testConflictsWith() {
+    public void testConflictsWith() {
         //Arrange
         Time timeObj = new Time(2, 35 , true);
         Course courseObject = new Course("EGR405", 3, null , timeObj, 2);
