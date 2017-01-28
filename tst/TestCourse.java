@@ -14,7 +14,7 @@ public class TestCourse {
     public void testEquals() {
         //Arrange
         Time timeObj = new Time(1,20, true);
-        Time timeObj2 = new Time(1, 20, true)
+        Time timeObj2 = new Time(1, 20, true);
 
 
         boolean test = timeObj.equals(timeObj2);
