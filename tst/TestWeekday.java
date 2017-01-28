@@ -20,16 +20,5 @@ public class TestWeekday {
         Assert.assertEquals("Invalid weekday", monday, weekdayObject.toShortName());
     }
 
-    @Test
-    public void testToString() {
-        //Arrange
-        Weekday weekdayObject = Weekday.MONDAY;
-
-        //Act
-        String tuesday = "Tuesday";
-
-        //Assert
-        Assert.assertEquals("Invalid weekday", tuesday, weekdayObject.toString());
-    }
 
 }

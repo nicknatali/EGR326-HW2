@@ -1,235 +1,164 @@
+import com.sun.istack.internal.NotNull;
 
 /**
  * Created by NickNatali on 1/22/17.
  * The Time class represents a particular time of day such as 12:30 PM or 9:47 AM.
  * All Time objects always have a valid state.
  */
-public class Time implements Cloneable, Comparable<Time> {
-
-    int hour;
-    int minute;
-    boolean PM;
+public class Time implements Cloneable, Comparable<Time>{
+    //Private variables
+    private int hour;
+    private int minute;
+    private boolean isPM;
 
     /**
      * Constructor
      */
-    public Time(int hour, int minute, boolean PM) {
-
-        //Validate hour and minutes
-        if(hour < 1 || hour > 12) {
-            throw new IllegalArgumentException("The hour cannot be less than 1 or greater than 12");
-        }
-
-//        if(minute < 1 || minute > 59) {
-//            throw new IllegalArgumentException("The minutes cannot be less than 1 or greater than 59");
-//        }
-
+    public Time(int hour, int minute, boolean isPM) throws IllegalArgumentException{
+        //Throw an error if hour & minute are not formatted properly.
+        if((hour <= 0 || hour > 12) || (minute < 0 || minute >= 60))
+            throw new IllegalArgumentException();
         this.hour = hour;
         this.minute = minute;
-        this.PM = PM;
+        this.isPM = isPM;
     }
 
     /**
-     * Accepts a string and converts it into a time object
+     * If in correct format, convert string to TimeObj
      */
-    public static Time fromString(String str) {
-        //Check if str is null
-        if(str.equals(null)) {
+    public static Time fromString(String str) throws IllegalArgumentException{
+        //break string apart
+        String[] timeFormat = str.split("[: ]");
+        int hour = Integer.parseInt(timeFormat[0]);
+        int minute = Integer.parseInt(timeFormat[1]);
+        boolean isPm;
+        //If parts are not the desired length
+        if(timeFormat[0].length() != 2 || timeFormat[1].length() != 2 || timeFormat[2].length() != 2)
             throw new IllegalArgumentException();
-        }
-
-        //If the time is greater than 10
-        if(str.subSequence(2,3).equals(":")) {
-            String hour = str.substring(0,2);
-            String minute = str.substring(3,5);
-            String meridiem = str.substring(6,8).toUpperCase();
-            boolean pm = true;
-
-            if(meridiem.equals("AM")) {
-                pm = false;
-            }
-            return new Time(Integer.parseInt(hour), Integer.parseInt(minute), pm);
-        }
-
-        //If the time is less than 10
-        else if(str.subSequence(1,2).equals(":")) {
-            String hour = "0" + str.substring(0,1);
-            String minute = str.substring(2,4);
-            String meridiem = str.substring(5,7).toUpperCase();
-            boolean pm = true;
-
-            if(meridiem.equals("AM")) {
-                pm = false;
-            }
-            return new Time(Integer.parseInt(hour), Integer.parseInt(minute), pm);
-        } else {
-            throw new IllegalArgumentException("Please enter the time in the corrext format");
-        }
+        //Make sure part[2] is exactly PM or AM, else throw an error
+        if(timeFormat[2].equals("PM"))
+            isPm = true;
+        else if(timeFormat[2].equals("AM"))
+            isPm = false;
+        else
+            throw new IllegalArgumentException();
+        //If an error hasn't been thrown yet, return the new Time object
+        return new Time(hour, minute, isPm);
     }
 
-
     /**
-     * Returns a copy of the object, following the contract of clone from the Java API
+     * Override equal function
      */
     @Override
-    public Time clone() throws CloneNotSupportedException {
+    public boolean equals(Object o){
+        if(o instanceof Time && o != null){
+            Time t = (Time) o;
+            return (hour == t.hour && minute == t.minute && isPM == t.isPM);
+        }
+        return false;
+    }
 
-        // Must use try catch to call Object's clone method
+    /**
+     * Overrides hashcode function
+     */
+    @Override
+    public int hashCode() {
+        if(isPM)
+            return hour * 347 + minute * 347;
+        else
+            return hour * 307 + minute * 307;
+    }
+
+    /**
+     * Accessors
+     */
+    public int getHour() {return hour;}
+    public int getMinute() {return minute;}
+    public boolean isPM() {return isPM;}
+
+    /**
+     * Shifts time of Time object by desired amount given in minutes
+     */
+    public void shift(int mins){
+        //If negative mins, throw an illegal argument error
+        if(mins < 0)
+            throw new IllegalArgumentException();
+        //Create an index variable and a list of hours
+        int hourIndex = 0;
+        int [] hours = {12,1,2,3,4,5,6,7,8,9,10,11,12,1,2,3,4,5,6,7,8,9,10,11};
+        //Check for special cases in which hour index needs a special or specific value
+        if(!isPM && hour == 12)
+            hourIndex = 0;
+        else if(isPM && hour != 12)
+            hourIndex = hour + 12;
+        else
+            hourIndex = hour;
+        //Add to hour index the number of positions moved, or how many hours are being added
+        hourIndex += ((mins + minute) / 60) % 24;
+        //If hourIndex is 24, thats the same as saying index is 0
+        if(hourIndex == 24)
+            hourIndex = 0;
+        //If hourIndex is in the upper half of the array of hours, its PM otherwise AM
+        if(hourIndex >= 12)
+            isPM = true;
+        else
+            isPM = false;
+        //Officially set hour/minute to what it has been changed too
+        hour = hours[hourIndex];
+        minute = ((mins % 60) + minute) % 60;
+    }
+
+    /**
+     * Change Time object variables to a formatted string
+     */
+    @Override
+    public String toString() {
+        if(isPM == false)
+            return (String.format("%02d", hour) + ":" + String.format("%02d", minute) + " AM");
+        else
+            return (String.format("%02d", hour) + ":" + String.format("%02d", minute) + " PM");
+    }
+
+    /**
+     * Override clone function
+     */
+    @Override
+    public Time clone() {
         try {
-            return clone();
-        } catch (CloneNotSupportedException e) {
-            //Dead code this will never happen because Cloneable is already implemented.
-            System.out.println(e);
+            return (Time) super.clone();
+        }catch (CloneNotSupportedException e){
+            e.printStackTrace();
             return null;
         }
     }
 
-
     /**
-     * Returns true if o refers to a Time object w/ exactly the same state as this one
-     */
-    public boolean equals(Time o) {
-        return this.getHour() == o.getHour() && this.getMinute() == o.getMinute() && this.isPM() == o.isPM();
-    }
-
-    /**
-     * Returns an integer indicating this time's placement in the natural ordering of times
-     * relative to the given other time.
+     * Allow for two Time objects to be compared
      */
     @Override
-    public int compareTo(Time time) {
-
-        int firstHour = 0;
-        int secondHour = 0;
-
-        //Convert to minutes, then compare
-
-        //isPM = true, and after 12PM
-        if(this.PM && this.hour != 12) {
-            firstHour = (this.hour + 12) * 60;
-        }
-
-        if(time.PM && time.hour != 12) {
-            secondHour = (time.hour + 12) * 60;
-        }
-
-        //Time is 12PM or isPM = false
-        if(this.PM && this.hour == 12) {
-            firstHour = (this.hour * 60);
-        }
-
-        if(time.PM && time.hour == 12) {
-            secondHour = (time.hour * 60);
-        }
-
-        //Add in the minutes
-        firstHour += this.minute;
-        secondHour += time.minute;
-
-        return (firstHour - secondHour);
+    public int compareTo(@NotNull Time o) {
+        //Variable to store total amount of minutes
+        int thisTotalMins, otherTotalMins;
+        //Special conditions for accounting for this objects minutes
+        if(!isPM && hour == 12)
+            thisTotalMins = minute;
+        else if(isPM && hour != 12)
+            thisTotalMins = (hour * 60) + minute + 720;
+        else
+            thisTotalMins = (hour * 60) + minute;
+        //Special conditions for accounting for other objects minutes
+        if(!o.isPM && o.hour == 12)
+            otherTotalMins = o.minute;
+        else if(o.isPM && o.hour != 12)
+            otherTotalMins = (o.hour * 60) + o.minute + 720;
+        else
+            otherTotalMins = (o.hour * 60) + o.minute;
+        //Return which has the most amount of minutes
+        if(thisTotalMins > otherTotalMins)
+            return 1;
+        else if(thisTotalMins == otherTotalMins)
+            return 0;
+        else
+            return -1;
     }
-
-
-    /**
-     *Acessors
-     */
-    public int getHour() {
-        return this.hour;
-    }
-
-    public int getMinute() {
-        return  this.minute;
-    }
-
-    /**
-     * Returns true if this time occurs between 12:00PM and 11:59PM
-     * TODO: double check this function
-     */
-    public boolean isPM() {
-        return this.PM;
-    }
-
-    /**
-     * Adjusts this time object forward in time by the given number of minutes.
-     */
-    public void shift(int minutes) {
-
-        //Check if minutes exists
-        if (minutes < 0) {
-            throw new IllegalArgumentException("Cannot have less than 0 minutes");
-        }
-
-        //Variables
-        int newHour = this.hour;
-        int newMinute = this.minute + minutes;
-
-        if (newMinute < 60) {
-
-            newMinute = this.minute + minutes;
-
-        } else {
-
-            //Convert 24 hour span
-            if(this.PM) {
-                newHour += 12;
-            }
-
-            //12AM
-            if(newHour == 12 && !this.PM) {
-                newHour = 0;
-            }
-
-            //Adding the new minutes to the subsequent hour
-            while(newMinute >= 60) {
-                    newHour += 1;
-                    newMinute -= 60;
-            }
-
-            //Determining meridiem
-            this.PM = newHour % 24 >= 12 || (this.hour == 12 && this.PM && newHour > 24);
-
-            this.hour = newHour % 24;
-
-            if(this.hour == 0) {
-                this.hour = 12;
-            }
-
-            if(this.hour > 12) {
-                this.hour = this.hour % 12;
-            }
-
-            this.minute = newMinute;
-
-        }
-
-    }
-
-    /**
-     * Returns a string for this time in HH:MM AM/PM format.
-     */
-    public String toString() {
-
-        String hour = Integer.toString(this.hour);
-
-        //If the hour is less than 10, preceed it with a 0
-        if(this.hour < 10 ) {
-            hour = "0" + this.hour;
-        }
-
-        String minute = Integer.toString(this.minute);
-
-        //If the minutes are less than ten, preceed it with a 0
-        if (this.minute < 10) {
-            minute = "0" + this.minute;
-        }
-
-        //Meridiem
-        if (this.PM) {
-            return hour + ":" + minute + " PM";
-        }
-
-        return hour + ":" + minute + " AM";
-    }
-
-
 }
