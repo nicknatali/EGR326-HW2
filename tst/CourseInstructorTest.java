@@ -59,16 +59,12 @@ public class CourseInstructorTest {
     }
 
     @Test
-    public void cloneTest(){
+    public void cloneTest() throws CloneNotSupportedException {
         Time startTime = new Time (5, 0, true);
         Set<Weekday> days =  EnumSet.of(Weekday.MONDAY, Weekday.WEDNESDAY, Weekday.FRIDAY);
         Course egr222 = new Course("EGR 222", 3, days, startTime, 60);
         Course copy = null;
-        try {
-            copy = (Course) egr222.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
+        copy = (Course) egr222.clone();
         Assert.assertTrue(egr222.equals(copy));
         Assert.assertFalse(egr222.getStartTime() == startTime);
         Assert.assertFalse(egr222.getStartTime() == copy.getStartTime());

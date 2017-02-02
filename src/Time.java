@@ -1,9 +1,11 @@
 import com.sun.istack.internal.NotNull;
 
 /**
- * Created by NickNatali on 1/22/17.
+ * Created by Nick Natali on 1/22/17.
  * The Time class represents a particular time of day such as 12:30 PM or 9:47 AM.
  * All Time objects always have a valid state.
+ * @author: Nick Natali
+ * @Version: SP17 Jan
  */
 public class Time implements Cloneable, Comparable<Time>{
     //Private variables
@@ -13,6 +15,10 @@ public class Time implements Cloneable, Comparable<Time>{
 
     /**
      * Constructor
+     * @param hour - intger representation for the hour
+     * @param minute - integer representation for the minutes of the hour
+     * @param isPM - true/false for meridiem.
+     * @throws IllegalArgumentException
      */
     public Time(int hour, int minute, boolean isPM) throws IllegalArgumentException{
         //Throw an error if hour & minute are not formatted properly.
@@ -25,6 +31,9 @@ public class Time implements Cloneable, Comparable<Time>{
 
     /**
      * If in correct format, convert string to TimeObj
+     * @param str - represents the time in a "12:00 AM" format
+     * @return - Time object
+     * @throws IllegalArgumentException
      */
     public static Time fromString(String str) throws IllegalArgumentException{
         //break string apart
@@ -48,6 +57,8 @@ public class Time implements Cloneable, Comparable<Time>{
 
     /**
      * Override equal function
+     * @param o - object
+     * @return boolean
      */
     @Override
     public boolean equals(Object o){
@@ -60,6 +71,7 @@ public class Time implements Cloneable, Comparable<Time>{
 
     /**
      * Overrides hashcode function
+     * @return int
      */
     @Override
     public int hashCode() {
@@ -78,6 +90,7 @@ public class Time implements Cloneable, Comparable<Time>{
 
     /**
      * Shifts time of Time object by desired amount given in minutes
+     * @param mins - integer to detmine how much to shift the time by
      */
     public void shift(int mins){
         //If negative mins, throw an illegal argument error
@@ -110,6 +123,7 @@ public class Time implements Cloneable, Comparable<Time>{
 
     /**
      * Change Time object variables to a formatted string
+     * @return string
      */
     @Override
     public String toString() {
@@ -121,6 +135,7 @@ public class Time implements Cloneable, Comparable<Time>{
 
     /**
      * Override clone function
+     * @return time object
      */
     @Override
     public Time clone() {
@@ -134,6 +149,8 @@ public class Time implements Cloneable, Comparable<Time>{
 
     /**
      * Allow for two Time objects to be compared
+     * @param o - time object
+     * @return integer
      */
     @Override
     public int compareTo(@NotNull Time o) {

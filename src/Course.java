@@ -1,162 +1,151 @@
-import java.util.Objects;
 import java.util.Set;
-import java.util.TreeSet;
-
 /**
  * Created by NickNatali on 1/22/17.
  * This class contains information about a particular university course.
+ * @author: Nick Natali
+ * @Version: SP17 Jan
  */
-public class Course implements Cloneable{
+import org.jetbrains.annotations.NotNull;
 
-    //Variables
+public class Course implements Cloneable, Comparable<Course>{
+    //Private Variables
     private String name;
     private int credits;
     private Set<Weekday> days;
     private Time startTime;
     private int duration;
 
+
     /**
      * Constructor
+     * @param name - String representation for course
+     * @param credits - int representation for units of a course
+     * @param days - days of the week that the course in class
+     * @param startTime - Time object that represents the beginning time of the course
+     * @param duration - int that represents how long a single course will be
      */
-    public Course(String name, int credits, Set<Weekday> days, Time startTime, int duration) {
-
-        if(name == "") {
-            throw new IllegalArgumentException("Name cannot be nil");
-        }
-
-        if(days.isEmpty()) {
-            throw new IllegalArgumentException("Invalid amount of days.");
-        }
-
-        if(credits < 1 || credits > 5) {
-            throw new IllegalArgumentException("Invalid amount of credits.");
-
-        }
-
-        if (duration < 1) {
-            throw new IllegalArgumentException("Invalid duration");
-        }
-
+    public Course(String name, int credits, Set<Weekday> days, Time startTime, int duration){
+        //Ensure that all entries are valid
+        if(credits > 5 || credits <= 0 || days == null || days.isEmpty() || startTime == null
+                || duration <= 0 || name == null || name.length() == 0 || !name.contains(" "))
+            throw new IllegalArgumentException();
         this.name = name;
         this.credits = credits;
-        this.days = new TreeSet<Weekday>(days);
-        this.startTime = startTime;
+        this.days = days;
+        this.startTime = startTime.clone();
         this.duration = duration;
     }
 
     /**
-     * Returns true if this course is in session during any days and times that overlap
-     * with the given course.
+     * Checks for conflicts with other courses
+     * @param course - course object to check if it conflicts with any other courses
+     * @return
      */
-
-    public boolean conflictsWith(Course course) {
-
-        Time start = course.getStartTime();
-        Time end = course.getEndTime();
-        Set<Weekday> days = course.days;
-
-        //Loop through each day classes are in session
-        //Check for conflicts
-        for (Weekday day : days) {
-            // Check conflicts with start and end times
-            boolean startTime = contains(day, start);
-            boolean endTime = contains(day, end);
-
-            if (startTime || endTime) {
-                return true;
+    public boolean conflictsWith(Course course){
+        //Loop through each day of this and other course
+        for(Weekday each : days){
+            if(course.days.contains(each)){
+                //Calculate start and end times
+                Time endTime = startTime.clone();
+                endTime.shift(duration);
+                Time otherEndTime = course.startTime.clone();
+                otherEndTime.shift(course.duration);
+                //If one course starts before the other and ends after the next one starts, return true
+                if(endTime.compareTo(course.startTime) <= 0 || startTime.compareTo(otherEndTime) >= 0)
+                    return false;
+                else
+                    return true;
             }
         }
         return false;
     }
 
     /**
-     * Returns true if this course is in session during the given time on the given day.
+     * Checks to see if a time is during a given class.
+     * @param day - to get what day the course is on
+     * @param time - to get information about start and end times
+     * @return
      */
-    public boolean contains(Weekday day, Time time) {
-
-        Time timeObj = this.startTime;
-        Time endTime = getEndTime();
-
-        if (days.contains(day)) {
-            // Check is starting times are equivalent
-            if (timeObj.equals(time)) {
+    public boolean contains(Weekday day, Time time){
+        if(days.contains(day)){
+            //Calculate start and end times
+            Time endTime = startTime.clone();
+            endTime.shift(duration);
+            //If time is between start and end time, return true
+            if(time.compareTo(startTime) >= 0 && time.compareTo(endTime) == -1)
                 return true;
-
-                //Check within start and end times
-            } else // If there aren't any matches
-                return timeObj.compareTo(time) < 0 && endTime.compareTo(time) > 0;
         }
         return false;
-
     }
 
     /**
-     * Returns true if and only if o refers to a Course object with exactly equivalent state as this one;
-     * otherwise returns false;
+     * Checks if two courses are equal
+     * @param obj to override equals method
+     * @return
      */
-    public boolean equals (Course o) {
-        return this.name.equals(o.getName()) && this.getCredits() == o.getCredits() &&
-                this.days.equals(o.days) && this.startTime.equals(o.startTime) && this.duration == o.duration;
-    }
-
-    /**
-     * Accessors for the course's various state as passed to the constructor
-     */
-    public int getCredits() {
-        return this.credits;
-    }
-
-    public int getDuration() {
-        return this.duration;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public Time getStartTime() {
-        return this.startTime;
-    }
-
-    /**
-     * Returns the non-inclusive and end time for this course,
-     * which differs in time by exactly duration minutes
-     * from the course's start time.
-     */
-    public Time getEndTime() {
-        int hour = this.startTime.getHour();
-        int minute = this.startTime.getMinute();
-        boolean period = this.startTime.isPM();
-
-        Time timeObj = new Time(hour, minute, period);
-        timeObj.shift(this.duration);
-        return timeObj;
-    }
-
-    /**
-     * Returns a string representation of this course. The string contains the course's name,
-     * credits, days, start time, and duration separated by commas.
-     */
-    public String toString() {
-        String days = "";
-
-        for(Weekday day : this.days) {
-            days += day.toShortName();
-        }
-
-        return this.name + "," + this.credits + "," + days + "," + this.startTime + "," + this.duration;
-    }
-
     @Override
-    protected Object clone() throws CloneNotSupportedException {
-        try {
-            return clone();
-        } catch (CloneNotSupportedException e) {
-            //Dead code this will never happen because Cloneable is already implemented.
-            System.out.println(e);
-            return null;
+    public boolean equals(Object obj) {
+        if(obj.getClass() == Course.class && obj != null){
+            Course other = (Course) obj;
+            return (name.equals(other.name) && credits == other.credits && days.equals(other.days)
+                    && startTime.equals(other.startTime) && duration == other.duration);
         }
+        return false;
+    }
 
+    /**
+     * Overrides the hashcode method
+     * @return an int
+     */
+    @Override
+    public int hashCode() {
+        int hashCode = 92821 * name.hashCode();
+        hashCode *= credits;
+        hashCode *= days.hashCode();
+        hashCode *= startTime.hashCode();
+        hashCode *= duration;
+        return hashCode;
+    }
 
+    /**
+     * Getters
+     */
+    public String getName() {return name;}
+    public int getCredits() {return credits;}
+    public Time getStartTime() {return startTime;}
+    public int getDuration() {return duration;}
+    public Time getEndTime(){
+        Time endTime = startTime.clone();
+        endTime.shift(duration);
+        return (endTime);
+    }
+
+    /**
+     * Converts object to string
+     * @return a String
+     */
+    @Override
+    public String toString() {
+        String stringOfCourse = name + "," + credits + ",";
+        for (Weekday each : days)
+            stringOfCourse += each.toShortName();
+        stringOfCourse += ("," + startTime.toString() + "," + duration);
+        return stringOfCourse;
+    }
+
+    /**
+     * Override compare function
+     */
+    @Override
+    public int compareTo(@NotNull Course o) {
+        return 0;
+    }
+
+    /**
+     * Override clone function
+     */
+    @Override
+    public Course clone() {
+        return new Course(name, credits, days, startTime.clone(), duration);
     }
 }

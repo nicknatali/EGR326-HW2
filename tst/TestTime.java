@@ -2,68 +2,112 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Created by NickNatali on 1/25/17.
+ * Created by Nick Natali on 1/25/17.
  * This class tests the Time class.
  */
 public class TestTime {
 
-    // Test toString()
+    /**
+     * Test toString()
+     */
     @Test
     public void testToString() {
         //Arrange
-       Time timeObj = new Time(1, 23, true);
+        int hour = 9;
+        int minute = 23;
+        boolean pm = true;
+
+        //Act
+        Time timeObj = new Time(hour, minute, pm);
 
        //Assert
-       Assert.assertEquals("Invalid toString", "01:23 PM", timeObj.toString() );
+       Assert.assertEquals("Invalid toString", "09:23 PM", timeObj.toString());
+
+       //Negative Testing
+       Assert.assertNotEquals("Valid String", "09:23 PM", timeObj.toString());
     }
 
-    // Test fromString method
+    /**
+     * Test fromString method
+     */
     @Test
     public void testFromString() {
         //Arrange
-        Time timeTest = new Time(1, 23, true);
+        int hour = 1;
+        int minute = 23;
+        boolean pm = true;
         String fromStringTest = "12:01 AM";
+        Time timeTest = new Time(hour, minute, pm);
+
 
         //Act
         Time string = timeTest.fromString(fromStringTest);
 
-
-
-        //Act
+        //Assert
         Assert.assertEquals("Incorrect from String conversion", string, timeTest.fromString("12:01 AM"));
 
+        //Negative Testing
+        Assert.assertNotEquals("Correct from String conversion", string, timeTest.fromString("12:01 AM"));
     }
 
-    // Test equals
+    /**
+     * Test equals
+     */
     @Test
     public void checkEquals() {
         //Arrange
-        Time timeObj1 = new Time(11, 30, true);
-        Time timeObj2 = new Time(11, 30, true);
+        int hour = 11;
+        int minute = 30;
+        boolean pm = true;
+        boolean checkEqualsTest = true;
+
 
         //Act
-        boolean checkEqualsTest = true;
+        Time timeObj1 = new Time(hour, minute, pm);
+        Time timeObj2 = new Time(hour, minute, pm);
+
         timeObj2.equals(checkEqualsTest);
 
         //Assert
         Assert.assertEquals("Invalid", checkEqualsTest, timeObj1.equals(timeObj2));
+
+        //Negative Testing
+        Assert.assertNotEquals("Valid", checkEqualsTest, timeObj1.equals(timeObj2));
     }
 
-    // Test compareTo
+    /**
+     * Test compareTo
+     */
     @Test
     public void testCompareTo() {
         //Arrange
-        Time timeObj1 = new Time(11, 20, true);
-        Time timeObj2 = new Time(11, 20, true);
+        int hour = 1;
+        int minute = 32;
+        boolean pm = true;
 
         //Act
-        timeObj1.compareTo(timeObj2);
+        Time timeObj1 = new Time(hour, minute, pm);
+        Time timeObj2 = new Time(hour, minute, pm);
 
         //Assert
-        Assert.assertEquals("Invalid", timeObj2.compareTo(timeObj1), timeObj1.compareTo(timeObj2));
+        Assert.assertEquals("Invalid", 0, timeObj2.compareTo(timeObj1));
+        timeObj1.shift(30);
+        Assert.assertEquals("Invalid", -1, timeObj2.compareTo(timeObj1));
+        timeObj2.shift(40);
+        Assert.assertEquals("Invalid", 1, timeObj2.compareTo(timeObj1));
+
+        //Negative Testing
+        timeObj1.shift(10);
+        Assert.assertNotEquals("These are equal", 0, timeObj2.compareTo(timeObj1));
+        timeObj1.shift(15);
+        Assert.assertNotEquals("These are not equal", -1, timeObj2.compareTo(timeObj1));
+        timeObj2.shift(16);
+        Assert.assertNotEquals("These are not equal", 1, timeObj2.compareTo(timeObj1));
     }
 
-    // Test shift
+    /**
+     * Test shift
+     */
     @Test
     public void testShift() {
         Time timeObject1 = new Time(11, 31, true);
@@ -99,7 +143,17 @@ public class TestTime {
         timeObject6.shift(45);
         Assert.assertEquals("incorrect shift", timeObject6,timeObj6);
 
+        //Negative testing
+        int hour = 10;
+        int minute = 23;
+        boolean pm = false;
+
+        Time timeObject7 = new Time(hour, minute, pm);
+        Time timeObj7 = new Time(hour, minute, pm);
+
+        timeObject7.shift(40);
+        timeObj7.shift(40);
+
+        Assert.assertNotEquals("The shift was correct", timeObject7, timeObj7);
     }
-
-
 }

@@ -2,6 +2,8 @@
 /**
  * Created by NickNatali on 1/22/17.
  * The Weekday enumeration represents the five days of the week for courses
+ * @author: Nick Natali
+ * @Version: SP17 Jan
  */
 public enum Weekday {
     //Enum
@@ -25,7 +27,11 @@ public enum Weekday {
     }
 
 
-
+    /**
+     * Converts a string representation of a weekday to an enum.
+     * @param s - string that represents the day of the week s
+     * @return a day of the week.
+     */
     public static Weekday fromString(String s) {
         if (s.toLowerCase().equals("m") || s.toLowerCase().equals("monday")) {
             return MONDAY;
@@ -42,6 +48,10 @@ public enum Weekday {
         }
     }
 
+    /**
+     * Converts an enum to an appreviated string representing the day of the week.
+     * @return a short hand string of the day of the week
+     */
     public String toShortName() {
 
         if( this == MONDAY) {
@@ -59,6 +69,10 @@ public enum Weekday {
         return "";
     }
 
+    /**
+     * Converts an enum to a string.
+     * @return a string.
+     */
     public String toString() {
 
         if( this == MONDAY) {
