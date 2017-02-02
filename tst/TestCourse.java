@@ -16,6 +16,7 @@ public class TestCourse {
     @Test
     public void constructorTest(){
         //Arrange
+
         String courseName = "EGR 302";
         int credits = 3;
         Set<Weekday> set = EnumSet.of(Weekday.MONDAY);
