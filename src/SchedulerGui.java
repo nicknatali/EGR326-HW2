@@ -37,7 +37,7 @@ import javax.swing.table.TableColumnModel;
  */
 public class SchedulerGui {
 	// the file name from which to read the student's courses
-	private static final String COURSES_FILE_NAME = "courses.txt";
+	private static final String COURSES_FILE_NAME = "myschedule.txt";
 	
 	// if true, grays out Drop button unless a course is selected in the table;
 	// disabling by default because it relies on lots of student's code working

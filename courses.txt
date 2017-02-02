@@ -1,8 +1,8 @@
 CHID 217, 1, null, 02:00 PM, 30
 FREN 428, 1, null, 04:30 PM, 60
 BIO 324L, 2, null, 11:30 AM, 150
-STAT 391, 2, nullnull, 08:30 AM, 90
-EGR 222, 3, nullnullnull, 05:00 PM, 60
-MATH 126, 3, nullnullnull, 02:00 PM, 90
-PHYS 121, 3, nullnull, 10:30 AM, 60
-EGR 182, 4, nullnullnull, 09:30 AM, 60
+STAT 391, 2, null, 08:30 AM, 90
+EGR 222, 3, null, 05:00 PM, 60
+MATH 126, 3, null, 02:00 PM, 90
+PHYS 121, 3, null, 10:30 AM, 60
+EGR 182, 4, null, 09:30 AM, 60

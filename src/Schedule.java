@@ -10,6 +10,8 @@ import java.io.*;
  * The schedule class contains information about the
  * collection of courses in which a student is
  * enrolled.
+ * @author: Nick Natali
+ * @Version: SP17 Jan
  */
 public class Schedule implements Cloneable {
 
@@ -27,6 +29,7 @@ public class Schedule implements Cloneable {
 
     /**
      * Adds the given course to this schedule.
+     * @param course - To be able to add the course to the schedule as long as it avoids conflicts
      */
     public void add(Course course) {
         //Check for conflicts
@@ -40,7 +43,8 @@ public class Schedule implements Cloneable {
     }
 
     /**
-     * Returns a copy of the object.
+     * Returns a copy of the object
+     * @return an object of type Schedule
      */
     public Schedule clone() {
         // Must use try catch in order to call Object's clone method
@@ -62,6 +66,9 @@ public class Schedule implements Cloneable {
     /**
      * Returns the course, if any, in this schedule that takes place on the given weekday at the
      * given time.
+     * @param day - to know what day the course occurs
+     * @param time - Time object to get the time, duration, and ispm values
+     * @return a course object
      */
     public Course getCourse(Weekday day, Time time) {
         //Loop through schedule
@@ -76,6 +83,8 @@ public class Schedule implements Cloneable {
     /**
      * Removes the course, if any, in this schedule that takes place
      * on the given weekday at the given time.
+     * @param day - To know what day the course occurs
+     * @param time - Time object to get the time and duration of course.
      */
     public void remove(Weekday day, Time time) {
         //Loop through the schedule
@@ -94,6 +103,8 @@ public class Schedule implements Cloneable {
     /**
      * Outputs the courses from this schedule to the given output file
      * in the ordering represented by the given course comparator.
+     * @param printStream - adds the ability to print representations of various data values conveniently
+     * @param comparator - imposes a total ordering on a collection of objects
      */
     public void save(PrintStream printStream, Comparator<Course> comparator) {
         //sort schedule by the comparator chosen by user
@@ -109,6 +120,7 @@ public class Schedule implements Cloneable {
     /**
      * Returns the total number of credits for which
      * the student is enrolled in.
+     * @return int
      */
     public int totalCredits() {
         return this.totalCredits;
@@ -116,8 +128,17 @@ public class Schedule implements Cloneable {
 
     /**
      * Returns a String representation of the schedule
+     * @return String
      */
     public String toString() {
         return this.schedule.toString();
+    }
+
+    /**
+     * Returns all of the courses, if any, in the schedule that takes place on the given weekday at the give time
+     * @return a collection of course objects
+     */
+    public Collection<Course> getAllCourses() {
+        return Collections.unmodifiableList(this.schedule);
     }
 }
